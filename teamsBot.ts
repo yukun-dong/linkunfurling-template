@@ -1,10 +1,7 @@
-import { default as axios } from "axios";
-import * as querystring from "querystring";
 import {
   TeamsActivityHandler,
   CardFactory,
   TurnContext,
-  MessagingExtensionQuery,
   MessagingExtensionResponse,
   AppBasedLinkQuery,
 } from "botbuilder";
