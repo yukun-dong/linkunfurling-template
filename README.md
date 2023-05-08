@@ -72,9 +72,29 @@ suggestedActions: {
           ],
         }
 ```
-After removing this, the link unfurling result will be cached in Teams for 30 minutes. Please refer to [this document](https://learn.microsoft.com/en-us/microsoftteams/platform/messaging-extensions/how-to/link-unfurling?tabs=desktop%2Cjson%2Cadvantages#remove-link-unfurling-cache) for more details.
+After removing this, the link unfurling result will be cached in Teams for 30 minutes. 
+
+Please refer to [this document](https://learn.microsoft.com/en-us/microsoftteams/platform/messaging-extensions/how-to/link-unfurling?tabs=desktop%2Cjson%2Cadvantages#remove-link-unfurling-cache) for more details.
 
 ## How to use Zero Install Link Unfurling
+Zero Install Link Unfurling requires link unfurling app to be published. You need an admin account to publish an app into your org.
+
+Login your admin account in Teams. Go to `Manage your apps` -> `Upload an app`. Click `Upload an app to your org's app catalog` to upload your app's zip file.
+
+![upload](./images/upload.png)
+
+Switch to another user account. Without installing this app, paste the link "https://www.botframework.com" into chatbox, and you should see the adaptive card like below.
+
+![zeroInstall](./images/zeroInstall.png)
+
+## Zero Install Link Unfurling's type
+The supported types for Zero Install Link Unfurling are "result" and "auth" and this template uses "result" as default. By changing it to "auth", the unfurled card will be:
+
+![zeroInstallAuth](./images/zeroInstallAuth.png)
+
+For card with type "auth", the Teams client strips away any action buttons from the card, and adds a sign in action button. 
+
+Please refer to [this document](https://learn.microsoft.com/en-us/microsoftteams/platform/messaging-extensions/how-to/link-unfurling?tabs=desktop%2Cjson%2Climitations#zero-install-for-link-unfurling) for more details.
   
 ## How to add stage view
 You can use the following steps to add stage view in the adaptive card.
@@ -181,6 +201,8 @@ Opening stage view from Adaptive card Action:
 Opening stage view from Adative card via deep link:
 
 ![viaDeepLink](./images/viaDeepLink.png)
+
+Please refer to [this document](https://learn.microsoft.com/en-us/microsoftteams/platform/tabs/tabs-link-unfurling) for more details.
 ## References
 
 * [Extend a Teams message extension across Microsoft 365](https://docs.microsoft.com/microsoftteams/platform/m365-apps/extend-m365-teams-message-extension?tabs=manifest-teams-toolkit)
