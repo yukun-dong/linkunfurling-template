@@ -4,9 +4,11 @@
 This is an Link Unfurling app that can unfurl an adaptive card after user pastes a link. This app also enables Zero Install Link Unfurling which helps you unfurl a card for your links even before you discovered or installed your app in Teams.
 
 Teams:
+
 ![Teams](./images/teams.png)
 
 Outlook:
+
 ![Outlook](./images/outlook.png)
 
 ## Prerequisites
@@ -74,7 +76,7 @@ After removing this, the link unfurling result will be cached in Teams for 30 mi
 
 ## How to use Zero Install Link Unfurling
   
-## how to add stage view
+## How to add stage view
 You can use the following steps to add stage view in the adaptive card.
 ### Step 1: Update `staticTabs` in manifest
 In `appPackage/manifest.json`, update `staticTabs` section.
@@ -169,10 +171,15 @@ In `linkUnfurlingBot.ts`, update `attachment` to be following.
 
 ```
 The unfurled adaptive card will be like:
+
 ![stageView](./images/stageView.png)
+
 Opening stage view from Adaptive card Action:
+
 ![viaAction](./images/viaAction.png)
+
 Opening stage view from Adative card via deep link:
+
 ![viaDeepLink](./images/viaDeepLink.png)
 ## References
 
