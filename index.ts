@@ -11,7 +11,7 @@ import {
 } from "botbuilder";
 
 // This bot's main dialog.
-import { LinkUnfurlingBot } from "./teamsBot";
+import { LinkUnfurlingBot } from "./linkUnfurlingBot";
 import config from "./config";
 
 // Create adapter.
