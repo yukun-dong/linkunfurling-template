@@ -31,7 +31,7 @@ Outlook:
 
 ## How to add link unfurling cache in Teams
 This template removes cache by default to provide convenience for debug. To add cache, remove following JSON part from adaptive card:
-```json
+```ts
 suggestedActions: {
           actions: [
             {
