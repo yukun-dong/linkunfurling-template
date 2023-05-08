@@ -2,7 +2,7 @@
     "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.14/MicrosoftTeams.schema.json",
     "manifestVersion": "1.14",
     "version": "1.0.0",
-    "id": "a0a783ea-6555-46dc-b483-732ad7cd4a32",
+    "id": "e25e8840-272e-4e55-a03f-4f835f32e746",
     "packageName": "com.microsoft.teams.extension",
     "developer": {
         "name": "Teams App, Inc.",
@@ -26,7 +26,7 @@
     "bots": [],
     "composeExtensions": [
         {
-            "botId": "3e8316f5-c037-4d55-85c0-38b7af3cfa07",
+            "botId": "3cb28551-e730-42fc-9989-8e9c4f04dea6",
             "commands": [
                 {
                     "id": "searchQuery",

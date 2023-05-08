@@ -11,7 +11,7 @@ import {
 } from "botbuilder";
 
 // This bot's main dialog.
-import { TeamsBot } from "./teamsBot";
+import { LinkUnfurlingBot } from "./teamsBot";
 import config from "./config";
 
 // Create adapter.
@@ -53,7 +53,7 @@ const onTurnErrorHandler = async (context: TurnContext, error: Error) => {
 adapter.onTurnError = onTurnErrorHandler;
 
 // Create the bot that will handle incoming messages.
-const bot = new TeamsBot();
+const bot = new LinkUnfurlingBot();
 
 // Create HTTP server.
 const server = restify.createServer();

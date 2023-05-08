@@ -7,7 +7,7 @@ import {
 } from "botbuilder";
 import card from "./card.json";
 
-export class TeamsBot extends TeamsActivityHandler {
+export class LinkUnfurlingBot extends TeamsActivityHandler {
   constructor() {
     super();
   }
