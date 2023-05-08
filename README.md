@@ -7,7 +7,7 @@ Teams:
 ![Teams](./images/teams.png)
 
 Outlook:
-![Teams](./images/outlook.png)
+![Outlook](./images/outlook.png)
 
 ## Prerequisites
 
@@ -16,8 +16,8 @@ Outlook:
 - [Teams Toolkit Visual Studio Code Extension](https://aka.ms/teams-toolkit) version 5.0.0 and higher or [TeamsFx CLI](https://aka.ms/teamsfx-cli)
 
 ## Debug
-- From Visual Studio Code: Start debugging the project by hitting the `F5`.
-- Alternatively use the `Run and Debug Activity Panel` in Visual Studio Code and click the `Run and Debug` green arrow button. You can choose to debug in Teams or Outlook depending on your preference.
+- From Visual Studio Code: Click `Run and Debug` panel.
+- Select a target Microsoft application where the link unfurling runs: `Debug in Teams`, `Debug in Outlook` and click the `Run and Debug` green arrow button.
 - From TeamsFx CLI: 
   - Install [ngrok](https://ngrok.com/download) and start your local tunnel service by running the command `ngrok http 3978`.
   - In the `env/.env.local` file, fill in the values for `BOT_DOMAIN` and `BOT_ENDPOINT` with your ngrok URL.
@@ -27,7 +27,7 @@ Outlook:
     ```
   - Executing the command `teamsfx provision --env local` in your project directory.
   - Executing the command `teamsfx deploy --env local` in your project directory.
-  - Executing the command `teamsfx preview --env local` in your project directory.
+  - Executing the command `teamsfx preview --env local --m365-host <m365-host>` in your project directory, where options for m365-host are `teams` or `outlook`.
 
 ## Edit the manifest
 
@@ -58,7 +58,7 @@ Once the provisioning and deployment steps are finished, you can preview your ap
 
 - From TeamsFx CLI: execute `teamsfx preview --env dev` in your project directory to launch your application.
 ## How to add link unfurling cache in Teams
-This template removes cache by default to provide convenience for debug. To add cache, remove following JSON part from adaptive card:
+This template removes cache by default to provide convenience for debug. To add cache, remove following JSON part from adaptive card in `linkUnfurlingBot.ts`:
 ```ts
 suggestedActions: {
           actions: [
@@ -74,8 +74,106 @@ After removing this, the link unfurling result will be cached in Teams for 30 mi
 
 ## How to use Zero Install Link Unfurling
   
-## How to add stage view 
+## how to add stage view
+You can use the following steps to add stage view in the adaptive card.
+### Step 1: Update `staticTabs` in manifest
+In `appPackage/manifest.json`, update `staticTabs` section.
+```json
+    "staticTabs": [
+        {
+            "entityId": "stageViewTask",
+            "name": "Stage View",
+            "contentUrl": "https://${{BOT_DOMAIN}}/tab",
+            "websiteUrl": "https://${{BOT_DOMAIN}}/tab",
+            "searchUrl": "https://${{BOT_DOMAIN}}/tab",
+            "scopes": [
+                "personal"
+            ],
+            "context": [
+                "personalTab",
+                "channelTab"
+            ]
+        }
+    ],
+```
 
+### Step 2: Update `index.ts`
+In `index.ts`, add following code.
+```ts
+server.get("/tab", async (req, res) => {
+  const body = `<!DOCTYPE html>
+  <html lang="en">
+  
+  <div class="text-center">
+    <h1 class="display-4">Tab in stage View</h1>
+  </div>
+  
+  </html>`;
+  res.writeHead(200, {
+    'Content-Length': Buffer.byteLength(body),
+    'Content-Type': 'text/html'
+  });
+  res.write(body);
+  res.end();
+});
+```
+### Step 3: Update teamsapp.local.yml
+In action `file/createOrUpdateEnvironmentFile`, add `TEAMS_APP_ID` and `BOT_DOMAIN` to env.
+```yaml
+  - uses: file/createOrUpdateEnvironmentFile # Generate runtime environment variables
+    with:
+      target: ./.localConfigs
+      envs:
+        BOT_ID: ${{BOT_ID}}
+        BOT_PASSWORD: ${{SECRET_BOT_PASSWORD}}
+        TEAMS_APP_ID: ${{TEAMS_APP_ID}}
+        BOT_DOMAIN: ${{BOT_DOMAIN}}
+```
+
+### Step 4: Update unfurled adaptive card
+In `card.json`, update `actions` to be following.
+```json
+"actions": [
+        {
+            "type": "Action.Submit",
+            "title": "View Via card",
+            "data":{
+                "msteams": {
+                    "type": "invoke",
+                    "value": {
+                        "type": "tab/tabInfoAction",
+                        "tabInfo": {
+                            "contentUrl": "https://${url}/tab",
+                            "websiteUrl": "https://${url}/tab"
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "type": "Action.OpenUrl",
+            "title": "View Via Deep Link",
+            "url": "https://teams.microsoft.com/l/stage/${appId}/0?context=%7B%22contentUrl%22%3A%22https%3A%2F%2F${url}%2Ftab%22%2C%22websiteUrl%22%3A%22https%3A%2F%2F${url}%2Fcontent%22%2C%22name%22%3A%22DemoStageView%22%7D"
+        }
+      ],
+```
+Run `npm install @microsoft/adaptivecards-tools`. This package helps render placeholders such as `${url}` in adative card to be real values.
+
+In `linkUnfurlingBot.ts`, update `attachment` to be following.
+```ts
+    const data = { url: process.env.BOT_DOMAIN, appId: process.env.TEAMS_APP_ID };
+
+    const renderedCard = AdaptiveCards.declare(card).render(data);
+
+    const attachment = { ...CardFactory.adaptiveCard(renderedCard), preview: previewCard };
+
+```
+The unfurled adaptive card will be like:
+![stageView](./images/stageView.png)
+Opening stage view from Adaptive card Action:
+![viaAction](./images/viaAction.png)
+Opening stage view from Adative card via deep link:
+![viaDeepLink](./images/viaDeepLink.png)
 ## References
 
 * [Extend a Teams message extension across Microsoft 365](https://docs.microsoft.com/microsoftteams/platform/m365-apps/extend-m365-teams-message-extension?tabs=manifest-teams-toolkit)
